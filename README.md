@@ -25,7 +25,7 @@ Import SQL file to the database:
  ```
 mysql -u <username> -p <databasename> < posdb.sql
  ```
-Run Start Djano:
+Run Djano:
  ```
 python manage.py makemigrations
  ```
