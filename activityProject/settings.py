@@ -80,8 +80,8 @@ DATABASES = {
 'default': {
         'ENGINE': 'django.db.backends.mysql',
         'USER': 'root',
-        'NAME': 'M3Activity',
-        'PASSWORD': 'roa3rmvs',
+        'NAME': 'posdb',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
     }

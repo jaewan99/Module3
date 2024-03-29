@@ -1,18 +1,352 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <!-- <link href="{% static '/openpos/form-validation.css' %}" rel="stylesheet"> -->
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta
+      name="author"
+      content="Mark Otto, Jacob Thornton, and Bootstrap contributors"
+    />
+    <meta name="generator" content="Hugo 0.79.0" />
+    <title>POS DB</title>
 
-<!-- Bootstrap core CSS -->
-    
-    <!-- <link href="{% static '/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-    <script src="{% static '/bootstrap/jquery-3.4.1.slim.min.js' %}"></script> -->
+    <!-- Bootstrap core CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <!--<script src="static/bootstrap/jquery-3.4.1.slim.min.js"></script> -->
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+      integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
+      crossorigin="anonymous"
+    ></script>
 
-</body>
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+
+        .lineamount {
+          width: 30%;
+        }
+      }
+    </style>
+
+    <!-- Custom styles for this template -->
+    <link href="{% static '/openpos/form-validation.css' %}" rel="stylesheet" />
+  </head>
+  <body class="bg-light">
+    <div class="container">
+      <main>
+        <div class="py-5 text-center">
+          <img
+            class="d-block mx-auto mb-4"
+            src="static/images/logo.png"
+            alt=""
+            width="72"
+            height="57"
+          />
+          <h2>POS Screen</h2>
+        </div>
+
+        <div class="row g-3">
+          <div class="col-md-5 col-lg-4">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+              <span class="text-muted">Current Order</span>
+            </h4>
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+              <span>Total (PHP)</span>
+              <span id="totamt"> 0.00 </span>
+            </h4>
+            <ul class="list-group mb-3" id="ord"></ul>
+            <form method="POST" action="{% url 'confirmOrder' %}">
+              {% csrf_token %}
+              <h4 class="mb-3">Payment Type</h4>
+              <div class="my-3">
+                <div class="form-check">
+                  <input
+                    id="credit"
+                    name="payment_method"
+                    type="radio"
+                    class="form-check-input"
+                    value="1"
+                    checked="checked"
+                  />
+                  <label class="form-check-label" for="credit">Cash </label>
+                </div>
+                <div class="form-check">
+                  <input
+                    id="debit"
+                    name="payment_method"
+                    type="radio"
+                    class="form-check-input"
+                    value="2"
+                  />
+                  <label class="form-check-label" for="debit"
+                    >Credit card</label
+                  >
+                </div>
+              </div>
+              <input
+                type="hidden"
+                name="complete_order"
+                id="complete_order"
+                value=""
+              />
+              <input
+                type="hidden"
+                name="total_amount"
+                id="total_amount"
+                value=""
+              />
+
+              <!-- Modify this later -->
+              <button type="submit" class="btn btn-primary" id="cls">
+                Close Order
+              </button>
+            </form>
+          </div>
+
+          <div class="col-md-7 col-lg-8">
+            <div class="row">
+              <h4 class="mb-3 col align-self-start">Items for sale</h4>
+              <a
+                class="col-3 mb-3 btn btn-warning"
+                href="{% url 'checkOrder' %}"
+                >Check Orders</a
+              >
+              <div class="col-3 text-end">
+                <a href="{% url 'configItem' %}">Configure Items</a>
+              </div>
+            </div>
+            <p class="ps-3 mb-1" style="font-size: 14px">
+              1. Kindly remember that the quantity available for order
+              <b>cannot exceed</b> the current quantity.
+            </p>
+            <p class="ps-3 mb-1" style="font-size: 14px">
+              2. If you want to change the quantity of the item you wish to
+              order, please type the revised quantity and then press the 'add'
+              button again.
+            </p>
+
+            <!-- novalid -->
+            <form class="needs-validation" novalidate>
+              <div class="row g-3">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Item Number</th>
+                      <th scope="col">Item Name</th>
+                      <th scope="col">Item Price</th>
+                      <th scope="col">Current Quantity</th>
+                      <th scope="col">Quantity to Order</th>
+                      <th scope="col">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in items %}{% if i.item_show == True %}
+                    <tr>
+                      <td class="ipk">{{i.pk}}</td>
+                      <td class="iname">{{i.item_name}}</td>
+                      <td class="iprice">PHP {{i.item_price}}</td>
+                      <td class="iquantity">{{i.item_quantity}}</td>
+                      <td class="w-25">
+                        <input
+                          type="number"
+                          class="form-control w-75 lineamount"
+                          value="0"
+                          min="0"
+                          max="{{i.item_quantity}}"
+                          onchange="checkInputValue(this)"
+                        />
+                        <input
+                          type="hidden"
+                          class="form-control nmeid"
+                          value="{{i.pk}}"
+                        />
+                      </td>
+                      <td>
+                        <button class="btn btn-primary itembut">Add</button>
+                      </td>
+                    </tr>
+                    {% endif %} {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+
+      <footer class="my-5 pt-5 text-muted text-center text-small">
+        <p class="mb-1">&copy; 2017–2020 POS Company</p>
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <a href="{% url 'configItem' %}">Configure Items</a>
+          </li>
+        </ul>
+      </footer>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      $(document).ready(function () {
+        var map = new Map();
+
+        // button to delete an item from the existing stuffs
+
+        $(document).on("click", ".delItemBtn", function () {
+          var amt = $(this).parent().parent().find(".totalDelAmount").html();
+          prc_amt = amt.split(" ");
+          delAmount = prc_amt[2];
+
+          // subtract from the total amount
+          var tamt = parseFloat($("#totamt").html());
+          tamt = tamt - delAmount;
+          $("#totamt").html(tamt.toFixed(2));
+
+          // remove the whole element
+          this.parentElement.parentElement.parentElement.remove();
+        });
+
+        $(".itembut").click(function () {
+          var amt = $(this).parent().parent().find(".lineamount").val();
+          var nme = $(this).parent().parent().find(".iname").html();
+          var nmeid = $(this).parent().parent().find(".nmeid").val();
+          var prc = $(this).parent().parent().find(".iprice").html();
+          var quan = $(this).parent().parent().find(".iquantity").html();
+          var tamt = parseFloat($("#totamt").html());
+          prc_amt = prc.split(" ");
+
+          // stop the function when there's no amt
+          if (amt == 0) {
+            return false;
+          }
+          // remove the exisiting 'stuff' of an item, if there is
+          var element = document.getElementById(nmeid);
+          if (element != null) {
+            // subtract the value to the total
+            let minusVal =
+              parseInt(document.getElementById("#" + nmeid).value) * prc_amt[1];
+            tamt = tamt - minusVal;
+            // remove the existing 'stuff'
+            document
+              .getElementById(nmeid)
+              .parentElement.parentElement.parentElement.remove();
+          }
+
+          lt = parseFloat(prc_amt[1]) * parseFloat(amt);
+          tamt = tamt + lt;
+          $("#totamt").html(tamt.toFixed(2));
+          stuff = " ";
+          stuff =
+            stuff +
+            '<li class="list-group-item d-flex justify-content-between lh-sm">';
+          stuff = stuff + "<div>";
+
+          stuff = stuff + '<h6 class="my-0 idnme">' + nme + "</h6>";
+          stuff =
+            stuff +
+            '<p style ="font-size: 12px">' +
+            "ID Number: " +
+            nmeid +
+            "</p>";
+          stuff =
+            stuff +
+            '<small class="text-muted">' +
+            prc_amt[1] +
+            ' x <span class="idamt" id= "' +
+            nmeid +
+            '">' +
+            amt +
+            "</span></small>";
+          stuff = stuff + "</div>";
+          stuff =
+            stuff +
+            '<input type="hidden" id= "#' +
+            nmeid +
+            '" value = "' +
+            amt +
+            '" >';
+
+          //  addede a delete button
+          stuff = stuff + "<div>";
+          stuff =
+            stuff +
+            '<p class="text-muted totalDelAmount"> PHP ' +
+            lt.toFixed(2) +
+            "</p>";
+          stuff =
+            stuff + "<div class ='d-flex align-items-end justify-content-end'>";
+          stuff =
+            stuff +
+            '<button class="btn btn-danger btn-sm h-50 delItemBtn">X' +
+            "</button>";
+          stuff = stuff + "</div>";
+          stuff = stuff + "</div>";
+          // end
+          stuff =
+            stuff +
+            '<input type="hidden" class="nmeid-ord" id= "' +
+            nmeid +
+            '" value = "' +
+            nmeid +
+            '" >';
+
+          stuff = stuff + "</li>";
+
+          $("#ord").append(stuff);
+          $(this).parent().parent().find(".lineamount").val(0);
+          event.preventDefault();
+        });
+
+        $("#cls").click(function () {
+          $("#ord li").each(function (i) {
+            var idnme = $(this).find(".idnme").html();
+            var idamt = $(this).find(".idamt").html();
+            var idid = $(this).find(".nmeid-ord").val();
+            var comb = idid + ":" + idamt;
+            $("#complete_order").val($("#complete_order").val() + comb + "-");
+          });
+          $("#total_amount").val($("#totamt").html());
+        });
+      });
+    </script>
+    <script>
+      function checkInputValue(input) {
+        // Get the maximum allowed value from the 'max' attribute of the input
+        var maxAllowed = parseInt(input.getAttribute("max"));
+
+        // Get the current value of the input
+        var currentValue = parseInt(input.value);
+
+        // If the current value is greater than the maximum allowed
+        if (currentValue > maxAllowed) {
+          // Set the value of the input to the maximum allowed
+          input.value = maxAllowed;
+        }
+        if (currentValue < 1) {
+          input.value = 0;
+        }
+      }
+    </script>
+  </body>
 </html>
