@@ -35,4 +35,9 @@ python manage.py migrate
  ```
 python manage.py runserver
  ```
+<br>
+
+### Default Homepage Screen
+
+![defaultPage](https://github.com/jaewan99/Module3/assets/68039639/e591b774-d76e-4d8f-b000-8020ff39a99e)
 
