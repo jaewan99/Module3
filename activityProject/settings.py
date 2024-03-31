@@ -135,3 +135,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# For amazon s3
+# AWS_S3_REGION_NAME = 'ap-northeast-2' # Your region name
+# AWS_S3_SIGNATURE_VERSION = 's3v4'
+
