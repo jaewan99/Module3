@@ -39,7 +39,8 @@ ALLOWED_HOSTS = ['127.0.0.1','localhost', 'djangoposdb-08ee64e241fb.herokuapp.co
 #     "http://localhost:8080",
 #     "http://127.0.0.1:9000"
 # ]
-CORS_ALLOW_ALL_ORIGINS = True
+CSRF_TRUSTED_ORIGINS = ["https://posdb.joji.tech"]
+# CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
