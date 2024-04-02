@@ -33,7 +33,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost', 'djangoposdb-08ee64e241fb.herokuapp.com']
-CSRF_TRUSTED_ORIGINS = ['posdb.joji.tech*']
+CSRF_TRUSTED_ORIGINS = ['https://posdb.joji.tech*']
 
 # Application definition
 
