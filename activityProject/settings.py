@@ -34,7 +34,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost', 'djangoposdb-08ee64e241fb.herokuapp.com']
 CORS_ALLOWED_ORIGINS = [
-    "https://posdb.joji.tech/*",
+    "https://posdb.joji.tech",
     "https://djangoposdb-08ee64e241fb.herokuapp.com/",
     "http://localhost:8080",
     "http://127.0.0.1:9000"
