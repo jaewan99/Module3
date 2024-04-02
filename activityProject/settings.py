@@ -30,6 +30,7 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
 DEBUG = (str(os.getenv('DEBUG_VALUE')) == "True")
+# DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost', 'djangoposdb-08ee64e241fb.herokuapp.com']
 

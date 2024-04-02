@@ -319,6 +319,10 @@
         });
 
         $("#cls").click(function () {
+          if ($("#totamt").html() == 0) {
+            alert("Please add an item to the order");
+            return false;
+          }
           $("#ord li").each(function (i) {
             var idnme = $(this).find(".idnme").html();
             var idamt = $(this).find(".idamt").html();

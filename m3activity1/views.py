@@ -41,6 +41,9 @@ def confirmOrder(request):
        ptype = request.POST.get("payment_method")
        items = request.POST.get("complete_order")
        totamt = request.POST.get("total_amount")
+       print("total amount: ", totamt, type(totamt))
+      #  if totamt <= 0:
+      #     return redirect('m3activity1')
 
        ord = order.objects.create(total_amount=totamt, payment=ptype)
        item_fixed = items[:-1]
