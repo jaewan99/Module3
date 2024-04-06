@@ -1,6 +1,7 @@
 from typing import Any
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -8,7 +9,7 @@ class item(models.Model):
     item_name = models.CharField(max_length=100)
     item_price = models.DecimalField(max_digits=6, decimal_places=2)
     item_show = models.BooleanField(default=True)
-    item_quantity = models.IntegerField(default = 1)
+    item_quantity = models.BigIntegerField()
 
     objects = models.Manager()
 
@@ -44,7 +45,7 @@ class itemOrder(models.Model):
     item_id = models.ForeignKey(item, null=True, on_delete=models.SET_NULL)
     order_id = models.ForeignKey(order, null=True, on_delete=models.SET_NULL)
     line_total= models.DecimalField(max_digits=30, decimal_places=2)
-    quantity = models.IntegerField()
+    quantity = models.BigIntegerField()
 
     objects = models.Manager()
 

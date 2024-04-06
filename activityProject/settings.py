@@ -26,11 +26,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-$_14t!p#i37vc90%@^@m24)3@i)fks)5uq4wo+#cg3baoj2f#k'
 SECRET_KEY = str(os.getenv('SECRET_KEY'))
-# print(SECRET_KEY)
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-# DEBUG = (str(os.getenv('DEBUG_VALUE')) == "True")
-DEBUG = True
+DEBUG = (str(os.getenv('DEBUG_VALUE')) == "True")
+# DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost', 'djangoposdb-08ee64e241fb.herokuapp.com']
 # CORS_ALLOWED_ORIGINS = [
@@ -41,8 +42,8 @@ ALLOWED_HOSTS = ['127.0.0.1','localhost', 'djangoposdb-08ee64e241fb.herokuapp.co
 # ]
 CSRF_TRUSTED_ORIGINS = ["https://posdb.joji.tech/*"]
 # CORS_ALLOW_ALL_ORIGINS = True
-# Application definition
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,8 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'm3activity1',
-    'corsheaders'
+    'm3activity1'
+    # 'corsheaders'
 ]   
 
 MIDDLEWARE = [
@@ -63,7 +64,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware'
-    
 ]
 
 ROOT_URLCONF = 'activityProject.urls'

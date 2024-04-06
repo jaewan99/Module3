@@ -70,6 +70,7 @@
               <!-- <p>Please follow the constrains</p> -->
               <div>
                 <tr>
+                  <p class="mb-4 text-danger">{{ error }}</p>
                   <form method="POST" action="{% url 'addItem' %}">
                     {% csrf_token %}
                     <p class="mb-0">Name:</p>
@@ -95,6 +96,7 @@
                           step="0.01"
                           min="0"
                           max="9999.99"
+                          required
                         />
 
                         <input
@@ -113,8 +115,9 @@
                           name="iquantity"
                           class="form-control"
                           placeholder="Item cost"
-                          value="{{oneitem.item_quantity}}"
                           min="1"
+                          max="9223372036854775806"
+                          required
                         />
                       </div>
                     </div>
